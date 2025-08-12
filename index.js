@@ -34,6 +34,10 @@ mongoose
     console.log(err)
   })
 
+app.get('/', (req, res) => {
+  res.send({ success: true })
+})
+
 app.use('/users', require('./router/users'))
 
 app.listen(3000, () => {

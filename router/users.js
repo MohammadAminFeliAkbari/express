@@ -1,15 +1,7 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const { body, validationResult } = require('express-validator')
 const router = express.Router()
-
-const userSchema = new mongoose.Schema({
-  first_name: { type: String, required: true },
-  last_name: { type: String, required: true },
-  age: { type: Number, required: true }
-})
-
-const User = mongoose.model('User', userSchema)
+const User = require('../models/user')
 
 /**
  * @swagger
@@ -172,6 +164,19 @@ router.delete('/:id', async (req, res) => {
   } catch {
     res.status(500).send({ error: true, success: false })
   }
+})
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params
+
+  await User.findOne({ _id: id })
+    .then(response => {
+      console.log(response);
+      res.send({ user: response, success: true })
+    })
+    .catch(err => {
+      res.status(404).send({ message: 'user not found', error: true })
+    })
 })
 
 module.exports = router
